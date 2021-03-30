@@ -3,6 +3,7 @@ ResolutionPrecedence:
   - Environment\$($Node.Environment)
   - Locations\$($Node.Location)
   - Roles\$($Node.Role)
+  - Stigs\$($Node.Stig)
   - Roles\ServerBaseline
   - Roles\DscBaseline
 
@@ -37,6 +38,9 @@ lookup_options:
     merge_options:
       tuple_keys:
         - DestinationPath
+
+  Ord:
+    merge_hash: deep
 
   NetworkIpConfiguration:
     merge_hash: deep

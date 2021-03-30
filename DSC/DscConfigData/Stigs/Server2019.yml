@@ -1,0 +1,11 @@
+Configurations:
+  - WindowsServer
+
+WindowsServer:
+  OsVersion: 2019
+  OsRole: MS
+  StigVersion: 2.1
+  SkipRule:
+    - V-205678
+    - V-205681
+  SkipRuleType: ProcessMitigationRule

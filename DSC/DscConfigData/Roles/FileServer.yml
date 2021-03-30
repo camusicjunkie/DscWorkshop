@@ -31,5 +31,5 @@ RegistryValues:
       Ensure: Present
       Force: true
 
-SecurityBaseline:
-  Role: FileServer
+# SecurityBaseline:
+#   Role: FileServer

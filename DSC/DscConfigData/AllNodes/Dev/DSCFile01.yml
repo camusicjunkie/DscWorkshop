@@ -1,20 +1,24 @@
+Configurations:
+  - Ord
+
 NodeName: DSCFile01
 Environment: Dev
 Role: FileServer
+Stig: Server2019
 Description: '[Command=(Import-Csv -Path $env:BHProjectPath\DscConfigData\ExternalData.csv -Delimiter ";" | Where-Object ComputerName -eq DSCFile01).Description]'
 
 Location: Frankfurt
 SomeData: '[Command=Get-Random]'
 
+Ord:
+  IPAddress: 172.16.2.141
+  InterfaceAlias: Ethernet1
+  AddressFamily: IPv4
+  PrefixLength: 24
+
+
 NetworkIpConfiguration:
-  Interfaces:
-    - InterfaceAlias: Ethernet
-      IpAddress: 192.168.111.100
-      Prefix: 24
-      Gateway: 192.168.111.50
-      DnsServer:
-        - 192.168.111.10
-      DisableNetbios: true
+  IpAddress: 192.168.111.100
 
 PSDscAllowPlainTextPassword: True
 PSDscAllowDomainUser: True

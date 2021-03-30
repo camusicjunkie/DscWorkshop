@@ -13,21 +13,22 @@ if (-not $environment ){
 
 configuration "RootConfiguration"
 {
-    Import-DscResource -ModuleName PSDesiredStateConfiguration
     Import-DscResource -ModuleName CommonTasks
+    Import-DscResource -ModuleName PowerSTIG
+    Import-DscResource -ModuleName PSDscResources
 
     $module = Get-Module -Name PSDesiredStateConfiguration
     & $module {
         param(
             [string]$BuildVersion,
             [string]$Environment
-        ) 
+        )
         $Script:PSTopConfigurationName = "MOF_$($Environment)_$($BuildVersion)"
     } $buildVersion, $environment
 
     node $ConfigurationData.AllNodes.NodeName {
         Write-Host "`r`n$('-'*75)`r`n$($Node.Name) : $($Node.NodeName) : $(&$module { $Script:PSTopConfigurationName })" -ForegroundColor Yellow
-        
+
         $configurationNames = Resolve-NodeProperty -PropertyPath 'Configurations'
         $global:node = $node #this makes the node variable being propagated into the configurations
 
@@ -36,9 +37,9 @@ configuration "RootConfiguration"
             $properties = Resolve-NodeProperty -PropertyPath $configurationName -DefaultValue @{}
 
             $dscError = [System.Collections.ArrayList]::new()
-            
+
             (Get-DscSplattedResource -ResourceName $configurationName -ExecutionName $configurationName -Properties $properties -NoInvoke).Invoke($properties)
-            
+
             if($Error[0] -and $lastError -ne $Error[0]) {
                 $lastIndex = [Math]::Max(($Error.LastIndexOf($lastError) -1), -1)
                 if($lastIndex -gt 0) {

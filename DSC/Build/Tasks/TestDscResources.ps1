@@ -7,18 +7,21 @@ task TestDscResources {
         Write-Host 'Currently loaded modules:'
         $env:PSModulePath -split ';' | Write-Host
         Write-Host ------------------------------------------------------------
-        Write-Host "The 'CommonTasks' module provides the following configurations (DSC Composite Resources)"
-        $m = Get-Module -Name CommonTasks -ListAvailable
+        Write-Host "The 'CommonTasks' and 'PowerSTIG' modules provide the following configurations (DSC Composite Resources)"
+        $m = Get-Module -Name CommonTasks, PowerSTIG -ListAvailable | Where-Object ModuleBase -like '*DscConfigurations*' | Select-Object -Unique
         if (-not $m) {
             Write-Error "The module 'CommonTasks' containing the configurations could not be found. Please check the file 'PSDepend.DscConfigurations.psd1' and verify if the module is available in the given repository" -ErrorAction Stop
         }
-        $resources = dir -Path "$($m.ModuleBase)\DscResources"
+
+        $resources = $m.ModuleBase | ForEach-Object {
+            Get-ChildItem -Path "$_\DscResources" -Directory | Where-Object BaseName -notlike Resources
+        }
         $resourceCount = $resources.Count
         Write-Host "ResourceCount $resourceCount"
 
         $maxIterations = 5
-        while ($resourceCount -ne (Get-DscResource -Module CommonTasks).Count -and $maxIterations -gt 0) {
-            $dscResources = Get-DscResource -Module CommonTasks
+        while ($resourceCount -ne (Get-DscResource | Where-Object ModuleName -in CommonTasks, PowerSTIG).Count -and $maxIterations -gt 0) {
+            $dscResources = Get-DscResource | Where-Object ModuleName -in CommonTasks, PowerSTIG
             Write-Host "ResourceCount DOES NOT match, currently '$($dscResources.Count)'. Resources missing:"
             Write-Host (Compare-Object -ReferenceObject $resources.Name -DifferenceObject $dscResources.Name).InputObject
             Start-Sleep -Seconds 5
@@ -32,7 +35,7 @@ task TestDscResources {
         Write-Host ------------------------------------------------------------
         Write-Host 'Known DSC Composite Resources'
         Write-Host ------------------------------------------------------------
-        Get-DscResource -Module CommonTasks | Out-String | Write-Host
+        Get-DscResource | Where-Object ModuleName -in CommonTasks, PowerSTIG | Out-String | Write-Host
 
         Write-Host ------------------------------------------------------------
         Write-Host 'Known DSC Resources'
