@@ -33,5 +33,6 @@
     xWindowsEventForwarding      = '1.0.0.0'
     OfficeOnlineServerDsc        = '1.5.0'
     xBitlocker                   = '1.4.0.0'
+    ActiveDirectoryCSDsc         = '5.0.0'
 
 }
