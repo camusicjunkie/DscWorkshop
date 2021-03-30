@@ -34,5 +34,6 @@
     OfficeOnlineServerDsc        = '1.5.0'
     xBitlocker                   = '1.4.0.0'
     PowerSTIG                    = '4.8.0'
+    ActiveDirectoryCSDsc         = '5.0.0'
 
 }
