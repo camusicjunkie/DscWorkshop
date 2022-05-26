@@ -34,6 +34,7 @@
 
     # Composites
     'DscConfig.Demo'             = '0.8.0'
+    'PowerSTIG'                  = '4.12.1'
 
     #DSC Resources
     xPSDesiredStateConfiguration = '9.1.0'
